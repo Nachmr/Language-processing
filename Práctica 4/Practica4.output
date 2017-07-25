@@ -1,0 +1,2644 @@
+Estado 156 conflictos: 1 desplazamiento(s)/reducción(ones)
+
+
+Gramática
+
+    0 $accept: Programa $end
+
+    1 Programa: cabecera_programa bloque
+
+    2 cabecera_programa: CABECERA
+    3                  | error
+
+    4 $@1: /* vacío */
+
+    5 bloque: LLAVEIZQ $@1 Declar_de_variables_locales Declar_de_subprogs Sentencias LLAVEDCH
+
+    6 Declar_de_subprogs: Declar_de_subprogs Declar_subprog
+    7                   | /* vacío */
+
+    8 Declar_subprog: Cabecera_subprog bloque
+
+    9 Declar_de_variables_locales: INICIODCL Variables_locales FINDCL
+   10                            | /* vacío */
+
+   11 Variables_locales: Variables_locales Cuerpo_declar_variables
+   12                  | Cuerpo_declar_variables
+
+   13 $@2: /* vacío */
+
+   14 Cuerpo_declar_variables: TIPO $@2 lista_variables PYC
+   15                        | error
+
+   16 lista_variables: lista_variables COMA identificador
+   17                | identificador
+
+   18 $@3: /* vacío */
+
+   19 Cabecera_subprog: TIPO NOMBREVAR PARIZQ $@3 argumentos PARDCH
+
+   20 Sentencias: Sentencias sentencia
+   21           | /* vacío */
+
+   22 sentencia: bloque
+   23          | sentencia_asignacion
+   24          | sentencia_si
+   25          | sentencia_mientras
+   26          | sentencia_hacer_hasta
+   27          | sentencia_entrada
+   28          | sentencia_salida
+   29          | sentencia_devolver
+   30          | error
+
+   31 id: NOMBREVAR
+   32   | id_array
+
+   33 sentencia_asignacion: id ASIGN expresion PYC
+
+   34 sentencia_si: SI PARIZQ expresion PARDCH sentencia
+   35             | SI PARIZQ expresion PARDCH sentencia SINO sentencia
+
+   36 sentencia_mientras: MIENTRAS PARIZQ expresion PARDCH sentencia
+
+   37 sentencia_hacer_hasta: HACER sentencia HASTA PARIZQ expresion PARDCH PYC
+
+   38 sentencia_entrada: ENTRADA lista_variables PYC
+
+   39 lista_expresiones_o_cadena: lista_expresiones_o_cadena COMA exp_o_cadena
+   40                           | exp_o_cadena
+
+   41 exp_o_cadena: expresion
+   42             | cadena
+
+   43 cadena: CADENAASCII
+
+   44 sentencia_salida: SALIDA lista_expresiones_o_cadena PYC
+
+   45 sentencia_devolver: DEVOLVER expresion PYC
+
+   46 expresion: PARIZQ expresion PARDCH
+   47          | expresion ORLOGICO expresion
+   48          | expresion ANDLOGICO expresion
+   49          | expresion XORLOGICO expresion
+   50          | expresion OPIGUALDAD expresion
+   51          | expresion OPRELACION expresion
+   52          | expresion OPMULTIPLICATIVOS expresion
+   53          | expresion SUMRES expresion
+   54          | SUMRES expresion
+   55          | NEG expresion
+   56          | INCREMENTO expresion
+   57          | DECREMENTO expresion
+   58          | id
+   59          | constante_array
+   60          | llamada_funcion
+   61          | error
+
+   62 $@4: /* vacío */
+
+   63 lista_exp_vacia: $@4 lista_expresiones
+   64                | /* vacío */
+
+   65 lista_expresiones: lista_expresiones COMA expresion
+   66                  | expresion
+
+   67 $@5: /* vacío */
+
+   68 llamada_funcion: NOMBREVAR $@5 PARIZQ lista_exp_vacia PARDCH
+
+   69 identificador: NOMBREVAR
+   70              | NOMBREVAR CORIZQ NENTERO CORDCH
+   71              | NOMBREVAR CORIZQ NENTERO CORDCH CORIZQ NENTERO CORDCH
+
+   72 id_array: NOMBREVAR CORIZQ expresion CORDCH
+   73         | NOMBREVAR CORIZQ expresion CORDCH CORIZQ expresion CORDCH
+
+   74 constante: NENTERO
+   75          | NDOBLE
+   76          | CARACTER
+   77          | BOOL
+
+   78 constante_array: constante
+   79                | array_entero
+   80                | array_real
+   81                | array_bool
+   82                | array_caracter
+
+   83 array_entero: CORIZQ asignacion_array_entero CORDCH
+
+   84 asignacion_array_entero: lista_num_entero PYC asignacion_array_entero
+   85                        | lista_num_entero
+
+   86 lista_num_entero: NENTERO COMA lista_num_entero
+   87                 | NENTERO
+
+   88 array_real: CORIZQ asignacion_array_real CORDCH
+
+   89 asignacion_array_real: lista_num_real PYC asignacion_array_real
+   90                      | lista_num_real
+
+   91 lista_num_real: NDOBLE COMA lista_num_real
+   92               | NDOBLE
+
+   93 array_bool: CORIZQ asignacion_array_bool CORDCH
+
+   94 asignacion_array_bool: lista_bool PYC asignacion_array_bool
+   95                      | lista_bool
+
+   96 lista_bool: BOOL COMA lista_bool
+   97           | BOOL
+
+   98 array_caracter: CORIZQ asignacion_array_caracter CORDCH
+
+   99 asignacion_array_caracter: lista_caracter PYC asignacion_array_caracter
+  100                          | lista_caracter
+
+  101 lista_caracter: CARACTER COMA lista_caracter
+  102               | CARACTER
+
+  103 argumentos: argumentos COMA arg
+  104           | arg
+  105           | /* vacío */
+
+  106 arg: TIPO identificador
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256) 3 15 30 61
+PYC (258) 14 33 37 38 44 45 84 89 94 99
+ORLOGICO (259) 47
+ANDLOGICO (260) 48
+XORLOGICO (261) 49
+OPIGUALDAD (262) 50
+OPRELACION (263) 51
+OPMULTIPLICATIVOS (264) 52
+NEG (265) 55
+INCREMENTO (266) 56
+DECREMENTO (267) 57
+SUMRES (268) 53 54
+PARDCH (269) 19 34 35 36 37 46 68
+PARIZQ (270) 19 34 35 36 37 46 68
+CORDCH (271) 70 71 72 73 83 88 93 98
+CORIZQ (272) 70 71 72 73 83 88 93 98
+LLAVEDCH (273) 5
+LLAVEIZQ (274) 5
+ASIGN (275) 33
+COMA (276) 16 39 65 86 91 96 101 103
+NENTERO (277) 70 71 74 86 87
+NDOBLE (278) 75 91 92
+BOOL (279) 77 96 97
+CARACTER (280) 76 101 102
+INICIODCL (281) 9
+FINDCL (282) 9
+CABECERA (283) 2
+TIPO (284) 14 19 106
+SI (285) 34 35
+SINO (286) 35
+MIENTRAS (287) 36
+HACER (288) 37
+HASTA (289) 37
+DEVOLVER (290) 45
+ENTRADA (291) 38
+SALIDA (292) 44
+NOMBREVAR (293) 19 31 68 69 70 71 72 73
+CADENAASCII (294) 43
+
+
+No terminales con las reglas donde aparecen
+
+$accept (40)
+    en la izquierda: 0
+Programa (41)
+    en la izquierda: 1, en la derecha: 0
+cabecera_programa (42)
+    en la izquierda: 2 3, en la derecha: 1
+bloque (43)
+    en la izquierda: 5, en la derecha: 1 8 22
+$@1 (44)
+    en la izquierda: 4, en la derecha: 5
+Declar_de_subprogs (45)
+    en la izquierda: 6 7, en la derecha: 5 6
+Declar_subprog (46)
+    en la izquierda: 8, en la derecha: 6
+Declar_de_variables_locales (47)
+    en la izquierda: 9 10, en la derecha: 5
+Variables_locales (48)
+    en la izquierda: 11 12, en la derecha: 9 11
+Cuerpo_declar_variables (49)
+    en la izquierda: 14 15, en la derecha: 11 12
+$@2 (50)
+    en la izquierda: 13, en la derecha: 14
+lista_variables (51)
+    en la izquierda: 16 17, en la derecha: 14 16 38
+Cabecera_subprog (52)
+    en la izquierda: 19, en la derecha: 8
+$@3 (53)
+    en la izquierda: 18, en la derecha: 19
+Sentencias (54)
+    en la izquierda: 20 21, en la derecha: 5 20
+sentencia (55)
+    en la izquierda: 22 23 24 25 26 27 28 29 30, en la derecha: 20
+    34 35 36 37
+id (56)
+    en la izquierda: 31 32, en la derecha: 33 58
+sentencia_asignacion (57)
+    en la izquierda: 33, en la derecha: 23
+sentencia_si (58)
+    en la izquierda: 34 35, en la derecha: 24
+sentencia_mientras (59)
+    en la izquierda: 36, en la derecha: 25
+sentencia_hacer_hasta (60)
+    en la izquierda: 37, en la derecha: 26
+sentencia_entrada (61)
+    en la izquierda: 38, en la derecha: 27
+lista_expresiones_o_cadena (62)
+    en la izquierda: 39 40, en la derecha: 39 44
+exp_o_cadena (63)
+    en la izquierda: 41 42, en la derecha: 39 40
+cadena (64)
+    en la izquierda: 43, en la derecha: 42
+sentencia_salida (65)
+    en la izquierda: 44, en la derecha: 28
+sentencia_devolver (66)
+    en la izquierda: 45, en la derecha: 29
+expresion (67)
+    en la izquierda: 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61,
+    en la derecha: 33 34 35 36 37 41 45 46 47 48 49 50 51 52 53 54
+    55 56 57 65 66 72 73
+lista_exp_vacia (68)
+    en la izquierda: 63 64, en la derecha: 68
+$@4 (69)
+    en la izquierda: 62, en la derecha: 63
+lista_expresiones (70)
+    en la izquierda: 65 66, en la derecha: 63 65
+llamada_funcion (71)
+    en la izquierda: 68, en la derecha: 60
+$@5 (72)
+    en la izquierda: 67, en la derecha: 68
+identificador (73)
+    en la izquierda: 69 70 71, en la derecha: 16 17 106
+id_array (74)
+    en la izquierda: 72 73, en la derecha: 32
+constante (75)
+    en la izquierda: 74 75 76 77, en la derecha: 78
+constante_array (76)
+    en la izquierda: 78 79 80 81 82, en la derecha: 59
+array_entero (77)
+    en la izquierda: 83, en la derecha: 79
+asignacion_array_entero (78)
+    en la izquierda: 84 85, en la derecha: 83 84
+lista_num_entero (79)
+    en la izquierda: 86 87, en la derecha: 84 85 86
+array_real (80)
+    en la izquierda: 88, en la derecha: 80
+asignacion_array_real (81)
+    en la izquierda: 89 90, en la derecha: 88 89
+lista_num_real (82)
+    en la izquierda: 91 92, en la derecha: 89 90 91
+array_bool (83)
+    en la izquierda: 93, en la derecha: 81
+asignacion_array_bool (84)
+    en la izquierda: 94 95, en la derecha: 93 94
+lista_bool (85)
+    en la izquierda: 96 97, en la derecha: 94 95 96
+array_caracter (86)
+    en la izquierda: 98, en la derecha: 82
+asignacion_array_caracter (87)
+    en la izquierda: 99 100, en la derecha: 98 99
+lista_caracter (88)
+    en la izquierda: 101 102, en la derecha: 99 100 101
+argumentos (89)
+    en la izquierda: 103 104 105, en la derecha: 19 103
+arg (90)
+    en la izquierda: 106, en la derecha: 103 104
+
+
+estado 0
+
+    0 $accept: . Programa $end
+
+    error     desplazar e ir al estado 1
+    CABECERA  desplazar e ir al estado 2
+
+    Programa           ir al estado 3
+    cabecera_programa  ir al estado 4
+
+
+estado 1
+
+    3 cabecera_programa: error .
+
+    $default  reduce usando la regla 3 (cabecera_programa)
+
+
+estado 2
+
+    2 cabecera_programa: CABECERA .
+
+    $default  reduce usando la regla 2 (cabecera_programa)
+
+
+estado 3
+
+    0 $accept: Programa . $end
+
+    $end  desplazar e ir al estado 5
+
+
+estado 4
+
+    1 Programa: cabecera_programa . bloque
+
+    LLAVEIZQ  desplazar e ir al estado 6
+
+    bloque  ir al estado 7
+
+
+estado 5
+
+    0 $accept: Programa $end .
+
+    $default  aceptar
+
+
+estado 6
+
+    5 bloque: LLAVEIZQ . $@1 Declar_de_variables_locales Declar_de_subprogs Sentencias LLAVEDCH
+
+    $default  reduce usando la regla 4 ($@1)
+
+    $@1  ir al estado 8
+
+
+estado 7
+
+    1 Programa: cabecera_programa bloque .
+
+    $default  reduce usando la regla 1 (Programa)
+
+
+estado 8
+
+    5 bloque: LLAVEIZQ $@1 . Declar_de_variables_locales Declar_de_subprogs Sentencias LLAVEDCH
+
+    INICIODCL  desplazar e ir al estado 9
+
+    $default  reduce usando la regla 10 (Declar_de_variables_locales)
+
+    Declar_de_variables_locales  ir al estado 10
+
+
+estado 9
+
+    9 Declar_de_variables_locales: INICIODCL . Variables_locales FINDCL
+
+    error  desplazar e ir al estado 11
+    TIPO   desplazar e ir al estado 12
+
+    Variables_locales        ir al estado 13
+    Cuerpo_declar_variables  ir al estado 14
+
+
+estado 10
+
+    5 bloque: LLAVEIZQ $@1 Declar_de_variables_locales . Declar_de_subprogs Sentencias LLAVEDCH
+
+    $default  reduce usando la regla 7 (Declar_de_subprogs)
+
+    Declar_de_subprogs  ir al estado 15
+
+
+estado 11
+
+   15 Cuerpo_declar_variables: error .
+
+    $default  reduce usando la regla 15 (Cuerpo_declar_variables)
+
+
+estado 12
+
+   14 Cuerpo_declar_variables: TIPO . $@2 lista_variables PYC
+
+    $default  reduce usando la regla 13 ($@2)
+
+    $@2  ir al estado 16
+
+
+estado 13
+
+    9 Declar_de_variables_locales: INICIODCL Variables_locales . FINDCL
+   11 Variables_locales: Variables_locales . Cuerpo_declar_variables
+
+    error   desplazar e ir al estado 11
+    FINDCL  desplazar e ir al estado 17
+    TIPO    desplazar e ir al estado 12
+
+    Cuerpo_declar_variables  ir al estado 18
+
+
+estado 14
+
+   12 Variables_locales: Cuerpo_declar_variables .
+
+    $default  reduce usando la regla 12 (Variables_locales)
+
+
+estado 15
+
+    5 bloque: LLAVEIZQ $@1 Declar_de_variables_locales Declar_de_subprogs . Sentencias LLAVEDCH
+    6 Declar_de_subprogs: Declar_de_subprogs . Declar_subprog
+
+    TIPO  desplazar e ir al estado 19
+
+    $default  reduce usando la regla 21 (Sentencias)
+
+    Declar_subprog    ir al estado 20
+    Cabecera_subprog  ir al estado 21
+    Sentencias        ir al estado 22
+
+
+estado 16
+
+   14 Cuerpo_declar_variables: TIPO $@2 . lista_variables PYC
+
+    NOMBREVAR  desplazar e ir al estado 23
+
+    lista_variables  ir al estado 24
+    identificador    ir al estado 25
+
+
+estado 17
+
+    9 Declar_de_variables_locales: INICIODCL Variables_locales FINDCL .
+
+    $default  reduce usando la regla 9 (Declar_de_variables_locales)
+
+
+estado 18
+
+   11 Variables_locales: Variables_locales Cuerpo_declar_variables .
+
+    $default  reduce usando la regla 11 (Variables_locales)
+
+
+estado 19
+
+   19 Cabecera_subprog: TIPO . NOMBREVAR PARIZQ $@3 argumentos PARDCH
+
+    NOMBREVAR  desplazar e ir al estado 26
+
+
+estado 20
+
+    6 Declar_de_subprogs: Declar_de_subprogs Declar_subprog .
+
+    $default  reduce usando la regla 6 (Declar_de_subprogs)
+
+
+estado 21
+
+    8 Declar_subprog: Cabecera_subprog . bloque
+
+    LLAVEIZQ  desplazar e ir al estado 6
+
+    bloque  ir al estado 27
+
+
+estado 22
+
+    5 bloque: LLAVEIZQ $@1 Declar_de_variables_locales Declar_de_subprogs Sentencias . LLAVEDCH
+   20 Sentencias: Sentencias . sentencia
+
+    error      desplazar e ir al estado 28
+    LLAVEDCH   desplazar e ir al estado 29
+    LLAVEIZQ   desplazar e ir al estado 6
+    SI         desplazar e ir al estado 30
+    MIENTRAS   desplazar e ir al estado 31
+    HACER      desplazar e ir al estado 32
+    DEVOLVER   desplazar e ir al estado 33
+    ENTRADA    desplazar e ir al estado 34
+    SALIDA     desplazar e ir al estado 35
+    NOMBREVAR  desplazar e ir al estado 36
+
+    bloque                 ir al estado 37
+    sentencia              ir al estado 38
+    id                     ir al estado 39
+    sentencia_asignacion   ir al estado 40
+    sentencia_si           ir al estado 41
+    sentencia_mientras     ir al estado 42
+    sentencia_hacer_hasta  ir al estado 43
+    sentencia_entrada      ir al estado 44
+    sentencia_salida       ir al estado 45
+    sentencia_devolver     ir al estado 46
+    id_array               ir al estado 47
+
+
+estado 23
+
+   69 identificador: NOMBREVAR .
+   70              | NOMBREVAR . CORIZQ NENTERO CORDCH
+   71              | NOMBREVAR . CORIZQ NENTERO CORDCH CORIZQ NENTERO CORDCH
+
+    CORIZQ  desplazar e ir al estado 48
+
+    $default  reduce usando la regla 69 (identificador)
+
+
+estado 24
+
+   14 Cuerpo_declar_variables: TIPO $@2 lista_variables . PYC
+   16 lista_variables: lista_variables . COMA identificador
+
+    PYC   desplazar e ir al estado 49
+    COMA  desplazar e ir al estado 50
+
+
+estado 25
+
+   17 lista_variables: identificador .
+
+    $default  reduce usando la regla 17 (lista_variables)
+
+
+estado 26
+
+   19 Cabecera_subprog: TIPO NOMBREVAR . PARIZQ $@3 argumentos PARDCH
+
+    PARIZQ  desplazar e ir al estado 51
+
+
+estado 27
+
+    8 Declar_subprog: Cabecera_subprog bloque .
+
+    $default  reduce usando la regla 8 (Declar_subprog)
+
+
+estado 28
+
+   30 sentencia: error .
+
+    $default  reduce usando la regla 30 (sentencia)
+
+
+estado 29
+
+    5 bloque: LLAVEIZQ $@1 Declar_de_variables_locales Declar_de_subprogs Sentencias LLAVEDCH .
+
+    $default  reduce usando la regla 5 (bloque)
+
+
+estado 30
+
+   34 sentencia_si: SI . PARIZQ expresion PARDCH sentencia
+   35             | SI . PARIZQ expresion PARDCH sentencia SINO sentencia
+
+    PARIZQ  desplazar e ir al estado 52
+
+
+estado 31
+
+   36 sentencia_mientras: MIENTRAS . PARIZQ expresion PARDCH sentencia
+
+    PARIZQ  desplazar e ir al estado 53
+
+
+estado 32
+
+   37 sentencia_hacer_hasta: HACER . sentencia HASTA PARIZQ expresion PARDCH PYC
+
+    error      desplazar e ir al estado 28
+    LLAVEIZQ   desplazar e ir al estado 6
+    SI         desplazar e ir al estado 30
+    MIENTRAS   desplazar e ir al estado 31
+    HACER      desplazar e ir al estado 32
+    DEVOLVER   desplazar e ir al estado 33
+    ENTRADA    desplazar e ir al estado 34
+    SALIDA     desplazar e ir al estado 35
+    NOMBREVAR  desplazar e ir al estado 36
+
+    bloque                 ir al estado 37
+    sentencia              ir al estado 54
+    id                     ir al estado 39
+    sentencia_asignacion   ir al estado 40
+    sentencia_si           ir al estado 41
+    sentencia_mientras     ir al estado 42
+    sentencia_hacer_hasta  ir al estado 43
+    sentencia_entrada      ir al estado 44
+    sentencia_salida       ir al estado 45
+    sentencia_devolver     ir al estado 46
+    id_array               ir al estado 47
+
+
+estado 33
+
+   45 sentencia_devolver: DEVOLVER . expresion PYC
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 68
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 34
+
+   38 sentencia_entrada: ENTRADA . lista_variables PYC
+
+    NOMBREVAR  desplazar e ir al estado 23
+
+    lista_variables  ir al estado 76
+    identificador    ir al estado 25
+
+
+estado 35
+
+   44 sentencia_salida: SALIDA . lista_expresiones_o_cadena PYC
+
+    error        desplazar e ir al estado 55
+    NEG          desplazar e ir al estado 56
+    INCREMENTO   desplazar e ir al estado 57
+    DECREMENTO   desplazar e ir al estado 58
+    SUMRES       desplazar e ir al estado 59
+    PARIZQ       desplazar e ir al estado 60
+    CORIZQ       desplazar e ir al estado 61
+    NENTERO      desplazar e ir al estado 62
+    NDOBLE       desplazar e ir al estado 63
+    BOOL         desplazar e ir al estado 64
+    CARACTER     desplazar e ir al estado 65
+    NOMBREVAR    desplazar e ir al estado 66
+    CADENAASCII  desplazar e ir al estado 77
+
+    id                          ir al estado 67
+    lista_expresiones_o_cadena  ir al estado 78
+    exp_o_cadena                ir al estado 79
+    cadena                      ir al estado 80
+    expresion                   ir al estado 81
+    llamada_funcion             ir al estado 69
+    id_array                    ir al estado 47
+    constante                   ir al estado 70
+    constante_array             ir al estado 71
+    array_entero                ir al estado 72
+    array_real                  ir al estado 73
+    array_bool                  ir al estado 74
+    array_caracter              ir al estado 75
+
+
+estado 36
+
+   31 id: NOMBREVAR .
+   72 id_array: NOMBREVAR . CORIZQ expresion CORDCH
+   73         | NOMBREVAR . CORIZQ expresion CORDCH CORIZQ expresion CORDCH
+
+    CORIZQ  desplazar e ir al estado 82
+
+    $default  reduce usando la regla 31 (id)
+
+
+estado 37
+
+   22 sentencia: bloque .
+
+    $default  reduce usando la regla 22 (sentencia)
+
+
+estado 38
+
+   20 Sentencias: Sentencias sentencia .
+
+    $default  reduce usando la regla 20 (Sentencias)
+
+
+estado 39
+
+   33 sentencia_asignacion: id . ASIGN expresion PYC
+
+    ASIGN  desplazar e ir al estado 83
+
+
+estado 40
+
+   23 sentencia: sentencia_asignacion .
+
+    $default  reduce usando la regla 23 (sentencia)
+
+
+estado 41
+
+   24 sentencia: sentencia_si .
+
+    $default  reduce usando la regla 24 (sentencia)
+
+
+estado 42
+
+   25 sentencia: sentencia_mientras .
+
+    $default  reduce usando la regla 25 (sentencia)
+
+
+estado 43
+
+   26 sentencia: sentencia_hacer_hasta .
+
+    $default  reduce usando la regla 26 (sentencia)
+
+
+estado 44
+
+   27 sentencia: sentencia_entrada .
+
+    $default  reduce usando la regla 27 (sentencia)
+
+
+estado 45
+
+   28 sentencia: sentencia_salida .
+
+    $default  reduce usando la regla 28 (sentencia)
+
+
+estado 46
+
+   29 sentencia: sentencia_devolver .
+
+    $default  reduce usando la regla 29 (sentencia)
+
+
+estado 47
+
+   32 id: id_array .
+
+    $default  reduce usando la regla 32 (id)
+
+
+estado 48
+
+   70 identificador: NOMBREVAR CORIZQ . NENTERO CORDCH
+   71              | NOMBREVAR CORIZQ . NENTERO CORDCH CORIZQ NENTERO CORDCH
+
+    NENTERO  desplazar e ir al estado 84
+
+
+estado 49
+
+   14 Cuerpo_declar_variables: TIPO $@2 lista_variables PYC .
+
+    $default  reduce usando la regla 14 (Cuerpo_declar_variables)
+
+
+estado 50
+
+   16 lista_variables: lista_variables COMA . identificador
+
+    NOMBREVAR  desplazar e ir al estado 23
+
+    identificador  ir al estado 85
+
+
+estado 51
+
+   19 Cabecera_subprog: TIPO NOMBREVAR PARIZQ . $@3 argumentos PARDCH
+
+    $default  reduce usando la regla 18 ($@3)
+
+    $@3  ir al estado 86
+
+
+estado 52
+
+   34 sentencia_si: SI PARIZQ . expresion PARDCH sentencia
+   35             | SI PARIZQ . expresion PARDCH sentencia SINO sentencia
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 87
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 53
+
+   36 sentencia_mientras: MIENTRAS PARIZQ . expresion PARDCH sentencia
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 88
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 54
+
+   37 sentencia_hacer_hasta: HACER sentencia . HASTA PARIZQ expresion PARDCH PYC
+
+    HASTA  desplazar e ir al estado 89
+
+
+estado 55
+
+   61 expresion: error .
+
+    $default  reduce usando la regla 61 (expresion)
+
+
+estado 56
+
+   55 expresion: NEG . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 90
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 57
+
+   56 expresion: INCREMENTO . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 91
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 58
+
+   57 expresion: DECREMENTO . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 92
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 59
+
+   54 expresion: SUMRES . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 93
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 60
+
+   46 expresion: PARIZQ . expresion PARDCH
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 94
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 61
+
+   83 array_entero: CORIZQ . asignacion_array_entero CORDCH
+   88 array_real: CORIZQ . asignacion_array_real CORDCH
+   93 array_bool: CORIZQ . asignacion_array_bool CORDCH
+   98 array_caracter: CORIZQ . asignacion_array_caracter CORDCH
+
+    NENTERO   desplazar e ir al estado 95
+    NDOBLE    desplazar e ir al estado 96
+    BOOL      desplazar e ir al estado 97
+    CARACTER  desplazar e ir al estado 98
+
+    asignacion_array_entero    ir al estado 99
+    lista_num_entero           ir al estado 100
+    asignacion_array_real      ir al estado 101
+    lista_num_real             ir al estado 102
+    asignacion_array_bool      ir al estado 103
+    lista_bool                 ir al estado 104
+    asignacion_array_caracter  ir al estado 105
+    lista_caracter             ir al estado 106
+
+
+estado 62
+
+   74 constante: NENTERO .
+
+    $default  reduce usando la regla 74 (constante)
+
+
+estado 63
+
+   75 constante: NDOBLE .
+
+    $default  reduce usando la regla 75 (constante)
+
+
+estado 64
+
+   77 constante: BOOL .
+
+    $default  reduce usando la regla 77 (constante)
+
+
+estado 65
+
+   76 constante: CARACTER .
+
+    $default  reduce usando la regla 76 (constante)
+
+
+estado 66
+
+   31 id: NOMBREVAR .
+   68 llamada_funcion: NOMBREVAR . $@5 PARIZQ lista_exp_vacia PARDCH
+   72 id_array: NOMBREVAR . CORIZQ expresion CORDCH
+   73         | NOMBREVAR . CORIZQ expresion CORDCH CORIZQ expresion CORDCH
+
+    CORIZQ  desplazar e ir al estado 82
+
+    PARIZQ    reduce usando la regla 67 ($@5)
+    $default  reduce usando la regla 31 (id)
+
+    $@5  ir al estado 107
+
+
+estado 67
+
+   58 expresion: id .
+
+    $default  reduce usando la regla 58 (expresion)
+
+
+estado 68
+
+   45 sentencia_devolver: DEVOLVER expresion . PYC
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    PYC                desplazar e ir al estado 108
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+
+estado 69
+
+   60 expresion: llamada_funcion .
+
+    $default  reduce usando la regla 60 (expresion)
+
+
+estado 70
+
+   78 constante_array: constante .
+
+    $default  reduce usando la regla 78 (constante_array)
+
+
+estado 71
+
+   59 expresion: constante_array .
+
+    $default  reduce usando la regla 59 (expresion)
+
+
+estado 72
+
+   79 constante_array: array_entero .
+
+    $default  reduce usando la regla 79 (constante_array)
+
+
+estado 73
+
+   80 constante_array: array_real .
+
+    $default  reduce usando la regla 80 (constante_array)
+
+
+estado 74
+
+   81 constante_array: array_bool .
+
+    $default  reduce usando la regla 81 (constante_array)
+
+
+estado 75
+
+   82 constante_array: array_caracter .
+
+    $default  reduce usando la regla 82 (constante_array)
+
+
+estado 76
+
+   16 lista_variables: lista_variables . COMA identificador
+   38 sentencia_entrada: ENTRADA lista_variables . PYC
+
+    PYC   desplazar e ir al estado 116
+    COMA  desplazar e ir al estado 50
+
+
+estado 77
+
+   43 cadena: CADENAASCII .
+
+    $default  reduce usando la regla 43 (cadena)
+
+
+estado 78
+
+   39 lista_expresiones_o_cadena: lista_expresiones_o_cadena . COMA exp_o_cadena
+   44 sentencia_salida: SALIDA lista_expresiones_o_cadena . PYC
+
+    PYC   desplazar e ir al estado 117
+    COMA  desplazar e ir al estado 118
+
+
+estado 79
+
+   40 lista_expresiones_o_cadena: exp_o_cadena .
+
+    $default  reduce usando la regla 40 (lista_expresiones_o_cadena)
+
+
+estado 80
+
+   42 exp_o_cadena: cadena .
+
+    $default  reduce usando la regla 42 (exp_o_cadena)
+
+
+estado 81
+
+   41 exp_o_cadena: expresion .
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 41 (exp_o_cadena)
+
+
+estado 82
+
+   72 id_array: NOMBREVAR CORIZQ . expresion CORDCH
+   73         | NOMBREVAR CORIZQ . expresion CORDCH CORIZQ expresion CORDCH
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 119
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 83
+
+   33 sentencia_asignacion: id ASIGN . expresion PYC
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 120
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 84
+
+   70 identificador: NOMBREVAR CORIZQ NENTERO . CORDCH
+   71              | NOMBREVAR CORIZQ NENTERO . CORDCH CORIZQ NENTERO CORDCH
+
+    CORDCH  desplazar e ir al estado 121
+
+
+estado 85
+
+   16 lista_variables: lista_variables COMA identificador .
+
+    $default  reduce usando la regla 16 (lista_variables)
+
+
+estado 86
+
+   19 Cabecera_subprog: TIPO NOMBREVAR PARIZQ $@3 . argumentos PARDCH
+
+    TIPO  desplazar e ir al estado 122
+
+    $default  reduce usando la regla 105 (argumentos)
+
+    argumentos  ir al estado 123
+    arg         ir al estado 124
+
+
+estado 87
+
+   34 sentencia_si: SI PARIZQ expresion . PARDCH sentencia
+   35             | SI PARIZQ expresion . PARDCH sentencia SINO sentencia
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+    PARDCH             desplazar e ir al estado 125
+
+
+estado 88
+
+   36 sentencia_mientras: MIENTRAS PARIZQ expresion . PARDCH sentencia
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+    PARDCH             desplazar e ir al estado 126
+
+
+estado 89
+
+   37 sentencia_hacer_hasta: HACER sentencia HASTA . PARIZQ expresion PARDCH PYC
+
+    PARIZQ  desplazar e ir al estado 127
+
+
+estado 90
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   55          | NEG expresion .
+
+    $default  reduce usando la regla 55 (expresion)
+
+
+estado 91
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   56          | INCREMENTO expresion .
+
+    $default  reduce usando la regla 56 (expresion)
+
+
+estado 92
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   57          | DECREMENTO expresion .
+
+    $default  reduce usando la regla 57 (expresion)
+
+
+estado 93
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   54          | SUMRES expresion .
+
+    SUMRES  desplazar e ir al estado 115
+
+    $default  reduce usando la regla 54 (expresion)
+
+
+estado 94
+
+   46 expresion: PARIZQ expresion . PARDCH
+   47          | expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+    PARDCH             desplazar e ir al estado 128
+
+
+estado 95
+
+   86 lista_num_entero: NENTERO . COMA lista_num_entero
+   87                 | NENTERO .
+
+    COMA  desplazar e ir al estado 129
+
+    $default  reduce usando la regla 87 (lista_num_entero)
+
+
+estado 96
+
+   91 lista_num_real: NDOBLE . COMA lista_num_real
+   92               | NDOBLE .
+
+    COMA  desplazar e ir al estado 130
+
+    $default  reduce usando la regla 92 (lista_num_real)
+
+
+estado 97
+
+   96 lista_bool: BOOL . COMA lista_bool
+   97           | BOOL .
+
+    COMA  desplazar e ir al estado 131
+
+    $default  reduce usando la regla 97 (lista_bool)
+
+
+estado 98
+
+  101 lista_caracter: CARACTER . COMA lista_caracter
+  102               | CARACTER .
+
+    COMA  desplazar e ir al estado 132
+
+    $default  reduce usando la regla 102 (lista_caracter)
+
+
+estado 99
+
+   83 array_entero: CORIZQ asignacion_array_entero . CORDCH
+
+    CORDCH  desplazar e ir al estado 133
+
+
+estado 100
+
+   84 asignacion_array_entero: lista_num_entero . PYC asignacion_array_entero
+   85                        | lista_num_entero .
+
+    PYC  desplazar e ir al estado 134
+
+    $default  reduce usando la regla 85 (asignacion_array_entero)
+
+
+estado 101
+
+   88 array_real: CORIZQ asignacion_array_real . CORDCH
+
+    CORDCH  desplazar e ir al estado 135
+
+
+estado 102
+
+   89 asignacion_array_real: lista_num_real . PYC asignacion_array_real
+   90                      | lista_num_real .
+
+    PYC  desplazar e ir al estado 136
+
+    $default  reduce usando la regla 90 (asignacion_array_real)
+
+
+estado 103
+
+   93 array_bool: CORIZQ asignacion_array_bool . CORDCH
+
+    CORDCH  desplazar e ir al estado 137
+
+
+estado 104
+
+   94 asignacion_array_bool: lista_bool . PYC asignacion_array_bool
+   95                      | lista_bool .
+
+    PYC  desplazar e ir al estado 138
+
+    $default  reduce usando la regla 95 (asignacion_array_bool)
+
+
+estado 105
+
+   98 array_caracter: CORIZQ asignacion_array_caracter . CORDCH
+
+    CORDCH  desplazar e ir al estado 139
+
+
+estado 106
+
+   99 asignacion_array_caracter: lista_caracter . PYC asignacion_array_caracter
+  100                          | lista_caracter .
+
+    PYC  desplazar e ir al estado 140
+
+    $default  reduce usando la regla 100 (asignacion_array_caracter)
+
+
+estado 107
+
+   68 llamada_funcion: NOMBREVAR $@5 . PARIZQ lista_exp_vacia PARDCH
+
+    PARIZQ  desplazar e ir al estado 141
+
+
+estado 108
+
+   45 sentencia_devolver: DEVOLVER expresion PYC .
+
+    $default  reduce usando la regla 45 (sentencia_devolver)
+
+
+estado 109
+
+   47 expresion: expresion ORLOGICO . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 142
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 110
+
+   48 expresion: expresion ANDLOGICO . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 143
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 111
+
+   49 expresion: expresion XORLOGICO . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 144
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 112
+
+   50 expresion: expresion OPIGUALDAD . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 145
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 113
+
+   51 expresion: expresion OPRELACION . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 146
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 114
+
+   52 expresion: expresion OPMULTIPLICATIVOS . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 147
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 115
+
+   53 expresion: expresion SUMRES . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 148
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 116
+
+   38 sentencia_entrada: ENTRADA lista_variables PYC .
+
+    $default  reduce usando la regla 38 (sentencia_entrada)
+
+
+estado 117
+
+   44 sentencia_salida: SALIDA lista_expresiones_o_cadena PYC .
+
+    $default  reduce usando la regla 44 (sentencia_salida)
+
+
+estado 118
+
+   39 lista_expresiones_o_cadena: lista_expresiones_o_cadena COMA . exp_o_cadena
+
+    error        desplazar e ir al estado 55
+    NEG          desplazar e ir al estado 56
+    INCREMENTO   desplazar e ir al estado 57
+    DECREMENTO   desplazar e ir al estado 58
+    SUMRES       desplazar e ir al estado 59
+    PARIZQ       desplazar e ir al estado 60
+    CORIZQ       desplazar e ir al estado 61
+    NENTERO      desplazar e ir al estado 62
+    NDOBLE       desplazar e ir al estado 63
+    BOOL         desplazar e ir al estado 64
+    CARACTER     desplazar e ir al estado 65
+    NOMBREVAR    desplazar e ir al estado 66
+    CADENAASCII  desplazar e ir al estado 77
+
+    id               ir al estado 67
+    exp_o_cadena     ir al estado 149
+    cadena           ir al estado 80
+    expresion        ir al estado 81
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 119
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   72 id_array: NOMBREVAR CORIZQ expresion . CORDCH
+   73         | NOMBREVAR CORIZQ expresion . CORDCH CORIZQ expresion CORDCH
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+    CORDCH             desplazar e ir al estado 150
+
+
+estado 120
+
+   33 sentencia_asignacion: id ASIGN expresion . PYC
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    PYC                desplazar e ir al estado 151
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+
+estado 121
+
+   70 identificador: NOMBREVAR CORIZQ NENTERO CORDCH .
+   71              | NOMBREVAR CORIZQ NENTERO CORDCH . CORIZQ NENTERO CORDCH
+
+    CORIZQ  desplazar e ir al estado 152
+
+    $default  reduce usando la regla 70 (identificador)
+
+
+estado 122
+
+  106 arg: TIPO . identificador
+
+    NOMBREVAR  desplazar e ir al estado 23
+
+    identificador  ir al estado 153
+
+
+estado 123
+
+   19 Cabecera_subprog: TIPO NOMBREVAR PARIZQ $@3 argumentos . PARDCH
+  103 argumentos: argumentos . COMA arg
+
+    PARDCH  desplazar e ir al estado 154
+    COMA    desplazar e ir al estado 155
+
+
+estado 124
+
+  104 argumentos: arg .
+
+    $default  reduce usando la regla 104 (argumentos)
+
+
+estado 125
+
+   34 sentencia_si: SI PARIZQ expresion PARDCH . sentencia
+   35             | SI PARIZQ expresion PARDCH . sentencia SINO sentencia
+
+    error      desplazar e ir al estado 28
+    LLAVEIZQ   desplazar e ir al estado 6
+    SI         desplazar e ir al estado 30
+    MIENTRAS   desplazar e ir al estado 31
+    HACER      desplazar e ir al estado 32
+    DEVOLVER   desplazar e ir al estado 33
+    ENTRADA    desplazar e ir al estado 34
+    SALIDA     desplazar e ir al estado 35
+    NOMBREVAR  desplazar e ir al estado 36
+
+    bloque                 ir al estado 37
+    sentencia              ir al estado 156
+    id                     ir al estado 39
+    sentencia_asignacion   ir al estado 40
+    sentencia_si           ir al estado 41
+    sentencia_mientras     ir al estado 42
+    sentencia_hacer_hasta  ir al estado 43
+    sentencia_entrada      ir al estado 44
+    sentencia_salida       ir al estado 45
+    sentencia_devolver     ir al estado 46
+    id_array               ir al estado 47
+
+
+estado 126
+
+   36 sentencia_mientras: MIENTRAS PARIZQ expresion PARDCH . sentencia
+
+    error      desplazar e ir al estado 28
+    LLAVEIZQ   desplazar e ir al estado 6
+    SI         desplazar e ir al estado 30
+    MIENTRAS   desplazar e ir al estado 31
+    HACER      desplazar e ir al estado 32
+    DEVOLVER   desplazar e ir al estado 33
+    ENTRADA    desplazar e ir al estado 34
+    SALIDA     desplazar e ir al estado 35
+    NOMBREVAR  desplazar e ir al estado 36
+
+    bloque                 ir al estado 37
+    sentencia              ir al estado 157
+    id                     ir al estado 39
+    sentencia_asignacion   ir al estado 40
+    sentencia_si           ir al estado 41
+    sentencia_mientras     ir al estado 42
+    sentencia_hacer_hasta  ir al estado 43
+    sentencia_entrada      ir al estado 44
+    sentencia_salida       ir al estado 45
+    sentencia_devolver     ir al estado 46
+    id_array               ir al estado 47
+
+
+estado 127
+
+   37 sentencia_hacer_hasta: HACER sentencia HASTA PARIZQ . expresion PARDCH PYC
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 158
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 128
+
+   46 expresion: PARIZQ expresion PARDCH .
+
+    $default  reduce usando la regla 46 (expresion)
+
+
+estado 129
+
+   86 lista_num_entero: NENTERO COMA . lista_num_entero
+
+    NENTERO  desplazar e ir al estado 95
+
+    lista_num_entero  ir al estado 159
+
+
+estado 130
+
+   91 lista_num_real: NDOBLE COMA . lista_num_real
+
+    NDOBLE  desplazar e ir al estado 96
+
+    lista_num_real  ir al estado 160
+
+
+estado 131
+
+   96 lista_bool: BOOL COMA . lista_bool
+
+    BOOL  desplazar e ir al estado 97
+
+    lista_bool  ir al estado 161
+
+
+estado 132
+
+  101 lista_caracter: CARACTER COMA . lista_caracter
+
+    CARACTER  desplazar e ir al estado 98
+
+    lista_caracter  ir al estado 162
+
+
+estado 133
+
+   83 array_entero: CORIZQ asignacion_array_entero CORDCH .
+
+    $default  reduce usando la regla 83 (array_entero)
+
+
+estado 134
+
+   84 asignacion_array_entero: lista_num_entero PYC . asignacion_array_entero
+
+    NENTERO  desplazar e ir al estado 95
+
+    asignacion_array_entero  ir al estado 163
+    lista_num_entero         ir al estado 100
+
+
+estado 135
+
+   88 array_real: CORIZQ asignacion_array_real CORDCH .
+
+    $default  reduce usando la regla 88 (array_real)
+
+
+estado 136
+
+   89 asignacion_array_real: lista_num_real PYC . asignacion_array_real
+
+    NDOBLE  desplazar e ir al estado 96
+
+    asignacion_array_real  ir al estado 164
+    lista_num_real         ir al estado 102
+
+
+estado 137
+
+   93 array_bool: CORIZQ asignacion_array_bool CORDCH .
+
+    $default  reduce usando la regla 93 (array_bool)
+
+
+estado 138
+
+   94 asignacion_array_bool: lista_bool PYC . asignacion_array_bool
+
+    BOOL  desplazar e ir al estado 97
+
+    asignacion_array_bool  ir al estado 165
+    lista_bool             ir al estado 104
+
+
+estado 139
+
+   98 array_caracter: CORIZQ asignacion_array_caracter CORDCH .
+
+    $default  reduce usando la regla 98 (array_caracter)
+
+
+estado 140
+
+   99 asignacion_array_caracter: lista_caracter PYC . asignacion_array_caracter
+
+    CARACTER  desplazar e ir al estado 98
+
+    asignacion_array_caracter  ir al estado 166
+    lista_caracter             ir al estado 106
+
+
+estado 141
+
+   68 llamada_funcion: NOMBREVAR $@5 PARIZQ . lista_exp_vacia PARDCH
+
+    PARDCH    reduce usando la regla 64 (lista_exp_vacia)
+    $default  reduce usando la regla 62 ($@4)
+
+    lista_exp_vacia  ir al estado 167
+    $@4              ir al estado 168
+
+
+estado 142
+
+   47 expresion: expresion . ORLOGICO expresion
+   47          | expresion ORLOGICO expresion .
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 47 (expresion)
+
+
+estado 143
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   48          | expresion ANDLOGICO expresion .
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 48 (expresion)
+
+
+estado 144
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   49          | expresion XORLOGICO expresion .
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 49 (expresion)
+
+
+estado 145
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   50          | expresion OPIGUALDAD expresion .
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 50 (expresion)
+
+
+estado 146
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   51          | expresion OPRELACION expresion .
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 51 (expresion)
+
+
+estado 147
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   52          | expresion OPMULTIPLICATIVOS expresion .
+   53          | expresion . SUMRES expresion
+
+    SUMRES  desplazar e ir al estado 115
+
+    $default  reduce usando la regla 52 (expresion)
+
+
+estado 148
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   53          | expresion SUMRES expresion .
+
+    SUMRES  desplazar e ir al estado 115
+
+    $default  reduce usando la regla 53 (expresion)
+
+
+estado 149
+
+   39 lista_expresiones_o_cadena: lista_expresiones_o_cadena COMA exp_o_cadena .
+
+    $default  reduce usando la regla 39 (lista_expresiones_o_cadena)
+
+
+estado 150
+
+   72 id_array: NOMBREVAR CORIZQ expresion CORDCH .
+   73         | NOMBREVAR CORIZQ expresion CORDCH . CORIZQ expresion CORDCH
+
+    CORIZQ  desplazar e ir al estado 169
+
+    $default  reduce usando la regla 72 (id_array)
+
+
+estado 151
+
+   33 sentencia_asignacion: id ASIGN expresion PYC .
+
+    $default  reduce usando la regla 33 (sentencia_asignacion)
+
+
+estado 152
+
+   71 identificador: NOMBREVAR CORIZQ NENTERO CORDCH CORIZQ . NENTERO CORDCH
+
+    NENTERO  desplazar e ir al estado 170
+
+
+estado 153
+
+  106 arg: TIPO identificador .
+
+    $default  reduce usando la regla 106 (arg)
+
+
+estado 154
+
+   19 Cabecera_subprog: TIPO NOMBREVAR PARIZQ $@3 argumentos PARDCH .
+
+    $default  reduce usando la regla 19 (Cabecera_subprog)
+
+
+estado 155
+
+  103 argumentos: argumentos COMA . arg
+
+    TIPO  desplazar e ir al estado 122
+
+    arg  ir al estado 171
+
+
+estado 156
+
+   34 sentencia_si: SI PARIZQ expresion PARDCH sentencia .
+   35             | SI PARIZQ expresion PARDCH sentencia . SINO sentencia
+
+    SINO  desplazar e ir al estado 172
+
+    SINO      [reduce usando la regla 34 (sentencia_si)]
+    $default  reduce usando la regla 34 (sentencia_si)
+
+
+estado 157
+
+   36 sentencia_mientras: MIENTRAS PARIZQ expresion PARDCH sentencia .
+
+    $default  reduce usando la regla 36 (sentencia_mientras)
+
+
+estado 158
+
+   37 sentencia_hacer_hasta: HACER sentencia HASTA PARIZQ expresion . PARDCH PYC
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+    PARDCH             desplazar e ir al estado 173
+
+
+estado 159
+
+   86 lista_num_entero: NENTERO COMA lista_num_entero .
+
+    $default  reduce usando la regla 86 (lista_num_entero)
+
+
+estado 160
+
+   91 lista_num_real: NDOBLE COMA lista_num_real .
+
+    $default  reduce usando la regla 91 (lista_num_real)
+
+
+estado 161
+
+   96 lista_bool: BOOL COMA lista_bool .
+
+    $default  reduce usando la regla 96 (lista_bool)
+
+
+estado 162
+
+  101 lista_caracter: CARACTER COMA lista_caracter .
+
+    $default  reduce usando la regla 101 (lista_caracter)
+
+
+estado 163
+
+   84 asignacion_array_entero: lista_num_entero PYC asignacion_array_entero .
+
+    $default  reduce usando la regla 84 (asignacion_array_entero)
+
+
+estado 164
+
+   89 asignacion_array_real: lista_num_real PYC asignacion_array_real .
+
+    $default  reduce usando la regla 89 (asignacion_array_real)
+
+
+estado 165
+
+   94 asignacion_array_bool: lista_bool PYC asignacion_array_bool .
+
+    $default  reduce usando la regla 94 (asignacion_array_bool)
+
+
+estado 166
+
+   99 asignacion_array_caracter: lista_caracter PYC asignacion_array_caracter .
+
+    $default  reduce usando la regla 99 (asignacion_array_caracter)
+
+
+estado 167
+
+   68 llamada_funcion: NOMBREVAR $@5 PARIZQ lista_exp_vacia . PARDCH
+
+    PARDCH  desplazar e ir al estado 174
+
+
+estado 168
+
+   63 lista_exp_vacia: $@4 . lista_expresiones
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id                 ir al estado 67
+    expresion          ir al estado 175
+    lista_expresiones  ir al estado 176
+    llamada_funcion    ir al estado 69
+    id_array           ir al estado 47
+    constante          ir al estado 70
+    constante_array    ir al estado 71
+    array_entero       ir al estado 72
+    array_real         ir al estado 73
+    array_bool         ir al estado 74
+    array_caracter     ir al estado 75
+
+
+estado 169
+
+   73 id_array: NOMBREVAR CORIZQ expresion CORDCH CORIZQ . expresion CORDCH
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 177
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 170
+
+   71 identificador: NOMBREVAR CORIZQ NENTERO CORDCH CORIZQ NENTERO . CORDCH
+
+    CORDCH  desplazar e ir al estado 178
+
+
+estado 171
+
+  103 argumentos: argumentos COMA arg .
+
+    $default  reduce usando la regla 103 (argumentos)
+
+
+estado 172
+
+   35 sentencia_si: SI PARIZQ expresion PARDCH sentencia SINO . sentencia
+
+    error      desplazar e ir al estado 28
+    LLAVEIZQ   desplazar e ir al estado 6
+    SI         desplazar e ir al estado 30
+    MIENTRAS   desplazar e ir al estado 31
+    HACER      desplazar e ir al estado 32
+    DEVOLVER   desplazar e ir al estado 33
+    ENTRADA    desplazar e ir al estado 34
+    SALIDA     desplazar e ir al estado 35
+    NOMBREVAR  desplazar e ir al estado 36
+
+    bloque                 ir al estado 37
+    sentencia              ir al estado 179
+    id                     ir al estado 39
+    sentencia_asignacion   ir al estado 40
+    sentencia_si           ir al estado 41
+    sentencia_mientras     ir al estado 42
+    sentencia_hacer_hasta  ir al estado 43
+    sentencia_entrada      ir al estado 44
+    sentencia_salida       ir al estado 45
+    sentencia_devolver     ir al estado 46
+    id_array               ir al estado 47
+
+
+estado 173
+
+   37 sentencia_hacer_hasta: HACER sentencia HASTA PARIZQ expresion PARDCH . PYC
+
+    PYC  desplazar e ir al estado 180
+
+
+estado 174
+
+   68 llamada_funcion: NOMBREVAR $@5 PARIZQ lista_exp_vacia PARDCH .
+
+    $default  reduce usando la regla 68 (llamada_funcion)
+
+
+estado 175
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   66 lista_expresiones: expresion .
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 66 (lista_expresiones)
+
+
+estado 176
+
+   63 lista_exp_vacia: $@4 lista_expresiones .
+   65 lista_expresiones: lista_expresiones . COMA expresion
+
+    COMA  desplazar e ir al estado 181
+
+    $default  reduce usando la regla 63 (lista_exp_vacia)
+
+
+estado 177
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   73 id_array: NOMBREVAR CORIZQ expresion CORDCH CORIZQ expresion . CORDCH
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+    CORDCH             desplazar e ir al estado 182
+
+
+estado 178
+
+   71 identificador: NOMBREVAR CORIZQ NENTERO CORDCH CORIZQ NENTERO CORDCH .
+
+    $default  reduce usando la regla 71 (identificador)
+
+
+estado 179
+
+   35 sentencia_si: SI PARIZQ expresion PARDCH sentencia SINO sentencia .
+
+    $default  reduce usando la regla 35 (sentencia_si)
+
+
+estado 180
+
+   37 sentencia_hacer_hasta: HACER sentencia HASTA PARIZQ expresion PARDCH PYC .
+
+    $default  reduce usando la regla 37 (sentencia_hacer_hasta)
+
+
+estado 181
+
+   65 lista_expresiones: lista_expresiones COMA . expresion
+
+    error       desplazar e ir al estado 55
+    NEG         desplazar e ir al estado 56
+    INCREMENTO  desplazar e ir al estado 57
+    DECREMENTO  desplazar e ir al estado 58
+    SUMRES      desplazar e ir al estado 59
+    PARIZQ      desplazar e ir al estado 60
+    CORIZQ      desplazar e ir al estado 61
+    NENTERO     desplazar e ir al estado 62
+    NDOBLE      desplazar e ir al estado 63
+    BOOL        desplazar e ir al estado 64
+    CARACTER    desplazar e ir al estado 65
+    NOMBREVAR   desplazar e ir al estado 66
+
+    id               ir al estado 67
+    expresion        ir al estado 183
+    llamada_funcion  ir al estado 69
+    id_array         ir al estado 47
+    constante        ir al estado 70
+    constante_array  ir al estado 71
+    array_entero     ir al estado 72
+    array_real       ir al estado 73
+    array_bool       ir al estado 74
+    array_caracter   ir al estado 75
+
+
+estado 182
+
+   73 id_array: NOMBREVAR CORIZQ expresion CORDCH CORIZQ expresion CORDCH .
+
+    $default  reduce usando la regla 73 (id_array)
+
+
+estado 183
+
+   47 expresion: expresion . ORLOGICO expresion
+   48          | expresion . ANDLOGICO expresion
+   49          | expresion . XORLOGICO expresion
+   50          | expresion . OPIGUALDAD expresion
+   51          | expresion . OPRELACION expresion
+   52          | expresion . OPMULTIPLICATIVOS expresion
+   53          | expresion . SUMRES expresion
+   65 lista_expresiones: lista_expresiones COMA expresion .
+
+    ORLOGICO           desplazar e ir al estado 109
+    ANDLOGICO          desplazar e ir al estado 110
+    XORLOGICO          desplazar e ir al estado 111
+    OPIGUALDAD         desplazar e ir al estado 112
+    OPRELACION         desplazar e ir al estado 113
+    OPMULTIPLICATIVOS  desplazar e ir al estado 114
+    SUMRES             desplazar e ir al estado 115
+
+    $default  reduce usando la regla 65 (lista_expresiones)

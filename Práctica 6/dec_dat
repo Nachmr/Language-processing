@@ -1,0 +1,766 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#ifndef DEC_DAT
+#define DEC_DAT
+
+typedef struct{
+	int * vector;
+	int cursor;
+	int n_elementos;
+	int tam;
+}lista_entero;
+
+typedef struct{
+	int * vector;
+	int cursor;
+	int n_elementos;
+	int tam;
+}lista_booleano;
+
+typedef struct{
+	float * vector;
+	int cursor;
+	int n_elementos;
+	int tam;
+}lista_real;
+
+typedef struct{
+	char * vector;
+	int cursor;
+	int n_elementos;
+	int tam;
+}lista_caracter;
+
+void inicializa_entero(lista_entero *l){
+	l->cursor=0;
+	l->tam=100;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(int) * 100);
+}
+
+void inicializa_entero_con_parametros(lista_entero * l,int tam){
+	l->cursor=0;
+	l->tam=tam;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(int) * tam);
+}
+
+lista_entero duplicar_lista_entero (lista_entero *l) {
+	lista_entero aux;
+	inicializa_entero_con_parametros (&aux, l->tam);
+	
+	int i;
+	for (i = 0; i < l->n_elementos; i++) {
+		aux.vector[i] = l->vector[i];
+	}
+	
+	aux.cursor = l->cursor;
+	aux.n_elementos = l->n_elementos;
+	
+	return aux;
+}
+
+void agrandar_entero(lista_entero *l){
+	int i;
+	int * aux;
+	
+	aux = malloc(sizeof (int) * (l->tam * 2));
+	
+	for(i=0; i < l->tam; i++){
+		aux[i] = l->vector[i];
+	}
+
+	l->tam = l->tam * 2;
+	l->vector = aux;
+}
+
+void avanzar_cursor_entero(lista_entero *l) {
+	l->cursor++;
+	
+	if (l->cursor > l->n_elementos) {
+		l->cursor--;
+	}
+}
+
+void retroceder_cursor_entero(lista_entero *l) {
+	l->cursor--;
+	
+	if (l->cursor < 0) {
+		l->cursor++;
+	}
+}
+
+void comienzo_cursor_entero(lista_entero *l) {
+	l->cursor = 0;
+}
+
+int longitud_entero(lista_entero *l){
+	return l->n_elementos;
+}
+
+int elemento_actual_entero(lista_entero *l){
+	return l->vector[l->cursor];
+}
+
+int elemento_pos_li_entero(lista_entero *l, int pos){
+	return l->vector[pos];
+}
+
+lista_entero insertar_entero(lista_entero *l, int a, int pos){
+	lista_entero aux = duplicar_lista_entero (l);
+	
+	if (pos > aux.tam) {
+		agrandar_entero(l);
+	}
+	
+	aux.vector[pos] = a;
+	
+	if (pos == aux.n_elementos) {
+		aux.n_elementos = pos + 1;
+	}
+	return aux;
+}
+
+lista_entero borrar_li_entero(lista_entero *l, int pos){
+	lista_entero aux = duplicar_lista_entero (l);
+	
+	int i;
+	for (i = pos; i < aux.tam-1; i++) {
+		aux.vector[i] = aux.vector[i+1];
+	}
+	
+	aux.n_elementos--;
+	if (aux.cursor > pos) {
+		aux.cursor--;
+	}
+
+	return aux;
+}
+
+lista_entero borrar_hasta_fin_li_entero(lista_entero *l, int pos){
+	lista_entero aux = duplicar_lista_entero (l);
+	
+	int i;
+	if (aux.cursor > pos) {
+		aux.cursor = pos-1;
+	}
+	
+	aux.n_elementos = pos-1;
+
+	return aux;
+}
+
+lista_entero concatenar_ll_entero(lista_entero *l1, 
+							      lista_entero *l2) {
+	lista_entero aux;
+	inicializa_entero_con_parametros(&aux, 
+									 l1->n_elementos+l2->n_elementos);
+									
+	int i;
+	for (i = 0; i < l1->n_elementos; i++) {
+		aux.vector[i] = l1->vector[i];
+	}
+	for (; i < l1->n_elementos + l2->n_elementos; i++) {
+		aux.vector[i] = l2->vector[i - l1->n_elementos];
+	}
+	
+	aux.n_elementos = l1->n_elementos+l2->n_elementos;
+	
+	return aux;
+}
+
+
+lista_entero suma_li_entero(lista_entero *l,int a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] += a;
+		
+	return *l;
+}
+
+lista_entero suma_il_entero(int a, lista_entero *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] += a;
+		
+	return *l;
+}
+
+lista_entero resta_li_entero(lista_entero *l,int a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] -= a;
+		
+	return *l;
+}
+
+lista_entero resta_il_entero(int a, lista_entero *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] -= a;
+		
+	return *l;
+}
+
+lista_entero producto_li_entero(lista_entero *l,int a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] *= a;
+		
+	return *l;
+}
+
+lista_entero producto_il_entero(int a, lista_entero *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] *= a;
+		
+	return *l;
+}
+
+lista_entero division_li_entero(lista_entero *l,int a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] /= a;
+		
+	return *l;
+}
+
+lista_entero division_il_entero(int a, lista_entero *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] /= a;
+		
+	return *l;
+}
+
+void imprimir_entero(lista_entero *l){
+    int i;
+
+	printf ("N elementos: %i\n", l->n_elementos);
+	for(i=0; i < l->n_elementos; i++){
+		printf("\tElemento %i: %i \n",i, l->vector[i]);
+	}
+	printf("\n");
+}
+
+// Funciones para reales
+void inicializa_real(lista_real *l){
+	l->cursor=0;
+	l->tam=100;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(float) * 100);
+}
+
+void inicializa_real_con_parametros(lista_real * l,int tam){
+	l->cursor=0;
+	l->tam=tam;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(float) * tam);
+}
+
+lista_real duplicar_lista_real (lista_real *l) {
+	lista_real aux;
+	inicializa_real_con_parametros (&aux, l->tam);
+	
+	int i;
+	for (i = 0; i < l->n_elementos; i++) {
+		aux.vector[i] = l->vector[i];
+	}
+	
+	aux.cursor = l->cursor;
+	aux.n_elementos = l->n_elementos;
+	
+	return aux;
+}
+
+void agrandar_real(lista_real *l){
+	int i;
+	float * aux;
+	
+	aux = malloc(sizeof (float) * (l->tam * 2));
+	
+	for(i=0; i < l->tam; i++){
+		aux[i] = l->vector[i];
+	}
+
+	l->tam = l->tam * 2;
+	l->vector = aux;
+}
+
+void avanzar_cursor_real(lista_real *l) {
+	l->cursor++;
+	
+	if (l->cursor > l->n_elementos) {
+		l->cursor--;
+	}
+}
+
+void retroceder_cursor_real(lista_real *l) {
+	l->cursor--;
+	
+	if (l->cursor < 0) {
+		l->cursor++;
+	}
+}
+
+void comienzo_cursor_real(lista_real *l) {
+	l->cursor = 0;
+}
+
+int longitud_real(lista_real *l){
+	return l->n_elementos;
+}
+
+float elemento_actual_real(lista_real *l){
+	return l->vector[l->cursor];
+}
+
+float elemento_pos_li_real(lista_real *l, int pos){
+	return l->vector[pos];
+}
+
+lista_real insertar_real(lista_real *l, float a, int pos){
+	lista_real aux = duplicar_lista_real (l);
+	
+	if (pos > aux.tam) {
+		agrandar_real(l);
+	}
+	
+	aux.vector[pos] = a;
+	
+	if (pos == aux.n_elementos) {
+		aux.n_elementos = pos + 1;
+	}
+
+	return aux;
+}
+
+lista_real borrar_li_real(lista_real *l, int pos){
+	lista_real aux = duplicar_lista_real (l);
+	
+	int i;
+	for (i = pos; i < aux.tam-1; i++) {
+		aux.vector[i] = aux.vector[i+1];
+	}
+	
+	aux.n_elementos--;
+	if (aux.cursor > pos) {
+		aux.cursor--;
+	}
+
+	return aux;
+}
+
+lista_real borrar_hasta_fin_li_real(lista_real *l, int pos){
+	lista_real aux = duplicar_lista_real (l);
+	
+	int i;
+	if (aux.cursor > pos) {
+		aux.cursor = pos-1;
+	}
+	
+	aux.n_elementos = pos-1;
+
+	return aux;
+}
+
+lista_real concatenar_ll_real(lista_real *l1, 
+							      lista_real *l2) {
+	lista_real aux;
+	inicializa_real_con_parametros(&aux, 
+									 l1->n_elementos+l2->n_elementos);
+									
+	int i;
+	for (i = 0; i < l1->n_elementos; i++) {
+		aux.vector[i] = l1->vector[i];
+	}
+	for (; i < l1->n_elementos + l2->n_elementos; i++) {
+		aux.vector[i] = l2->vector[i - l1->n_elementos];
+	}
+	
+	aux.n_elementos = l1->n_elementos+l2->n_elementos;
+	
+	return aux;
+}
+
+
+lista_real suma_li_real(lista_real *l,float a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] += a;
+		
+	return *l;
+}
+
+lista_real suma_il_real(float a, lista_real *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] += a;
+		
+	return *l;
+}
+
+lista_real resta_li_real(lista_real *l,float a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] -= a;
+		
+	return *l;
+}
+
+lista_real resta_il_real(float a, lista_real *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] -= a;
+		
+	return *l;
+}
+
+lista_real producto_li_real(lista_real *l,float a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] *= a;
+		
+	return *l;
+}
+
+lista_real producto_il_real(float a, lista_real *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] *= a;
+		
+	return *l;
+}
+
+lista_real division_li_real(lista_real *l,float a){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] /= a;
+		
+	return *l;
+}
+
+lista_real division_il_real(float a, lista_real *l){		
+	int i=0;
+	for(i; i < l->n_elementos; i++)
+		l->vector[i] /= a;
+		
+	return *l;
+}
+
+void imprimir_real(lista_real *l){
+    int i;
+
+	printf ("N elementos: %i\n", l->n_elementos);
+	for(i=0; i < l->n_elementos; i++){
+		printf("\tElemento %i: %f \n",i, l->vector[i]);
+	}
+	printf("\n");
+}
+
+// Funciones para caracteres
+void inicializa_caracter(lista_caracter *l){
+	l->cursor=0;
+	l->tam=100;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(char) * 100);
+}
+
+void inicializa_caracter_con_parametros(lista_caracter * l,int tam){
+	l->cursor=0;
+	l->tam=tam;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(char) * tam);
+}
+
+lista_caracter duplicar_lista_caracter (lista_caracter *l) {
+	lista_caracter aux;
+	inicializa_caracter_con_parametros (&aux, l->tam);
+	
+	int i;
+	for (i = 0; i < l->n_elementos; i++) {
+		aux.vector[i] = l->vector[i];
+	}
+	
+	aux.cursor = l->cursor;
+	aux.n_elementos = l->n_elementos;
+	
+	return aux;
+}
+
+void agrandar_caracter(lista_caracter *l){
+	int i;
+	char * aux;
+	
+	aux = malloc(sizeof (char) * (l->tam * 2));
+	
+	for(i=0; i < l->tam; i++){
+		aux[i] = l->vector[i];
+	}
+
+	l->tam = l->tam * 2;
+	l->vector = aux;
+}
+
+void avanzar_cursor_caracter(lista_caracter *l) {
+	l->cursor++;
+	
+	if (l->cursor > l->n_elementos) {
+		l->cursor--;
+	}
+}
+
+void retroceder_cursor_caracter(lista_caracter *l) {
+	l->cursor--;
+	
+	if (l->cursor < 0) {
+		l->cursor++;
+	}
+}
+
+void comienzo_cursor_caracter(lista_caracter *l) {
+	l->cursor = 0;
+}
+
+int longitud_caracter(lista_caracter *l){
+	return l->n_elementos;
+}
+
+char elemento_actual_caracter(lista_caracter *l){
+	return l->vector[l->cursor];
+}
+
+char elemento_pos_li_caracter(lista_caracter *l, int pos){
+	return l->vector[pos];
+}
+
+lista_caracter insertar_caracter(lista_caracter *l, char a, int pos){
+	lista_caracter aux = duplicar_lista_caracter (l);
+	
+	if (pos > aux.tam) {
+		agrandar_caracter(l);
+	}
+	
+	aux.vector[pos] = a;
+	
+	if (pos == aux.n_elementos) {
+		aux.n_elementos = pos + 1;
+	}
+
+	return aux;
+}
+
+lista_caracter borrar_li_caracter(lista_caracter *l, int pos){
+	lista_caracter aux = duplicar_lista_caracter (l);
+	
+	int i;
+	for (i = pos; i < aux.tam-1; i++) {
+		aux.vector[i] = aux.vector[i+1];
+	}
+	
+	aux.n_elementos--;
+	if (aux.cursor > pos) {
+		aux.cursor--;
+	}
+
+	return aux;
+}
+
+lista_caracter borrar_hasta_fin_li_caracter(lista_caracter *l, int pos){
+	lista_caracter aux = duplicar_lista_caracter (l);
+	
+	int i;
+	if (aux.cursor > pos) {
+		aux.cursor = pos-1;
+	}
+	
+	aux.n_elementos = pos-1;
+
+	return aux;
+}
+
+lista_caracter concatenar_ll_caracter(lista_caracter *l1, 
+							      lista_caracter *l2) {
+	lista_caracter aux;
+	inicializa_caracter_con_parametros(&aux, 
+									 l1->n_elementos+l2->n_elementos);
+									
+	int i;
+	for (i = 0; i < l1->n_elementos; i++) {
+		aux.vector[i] = l1->vector[i];
+	}
+	for (; i < l1->n_elementos + l2->n_elementos; i++) {
+		aux.vector[i] = l2->vector[i - l1->n_elementos];
+	}
+	
+	aux.n_elementos = l1->n_elementos+l2->n_elementos;
+	
+	return aux;
+}
+
+void imprimir_caracter(lista_caracter *l){
+    int i;
+
+	printf ("N elementos: %i\n", l->n_elementos);
+	for(i=0; i < l->n_elementos; i++){
+		printf("\tElemento %i: %c \n",i, l->vector[i]);
+	}
+	printf("\n");
+}
+
+
+// Funciones para booleanos
+
+void inicializa_booleano(lista_booleano *l){
+	l->cursor=0;
+	l->tam=100;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(int) * 100);
+}
+
+void inicializa_booleano_con_parametros(lista_booleano * l,int tam){
+	l->cursor=0;
+	l->tam=tam;
+	l->n_elementos = 0;
+	l->vector = malloc(sizeof(int) * tam);
+}
+
+lista_booleano duplicar_lista_booleano (lista_booleano *l) {
+	lista_booleano aux;
+	inicializa_booleano_con_parametros (&aux, l->tam);
+	
+	int i;
+	for (i = 0; i < l->n_elementos; i++) {
+		aux.vector[i] = l->vector[i];
+	}
+	
+	aux.cursor = l->cursor;
+	aux.n_elementos = l->n_elementos;
+	
+	return aux;
+}
+
+void agrandar_booleano(lista_booleano *l){
+	int i;
+	int * aux;
+	
+	aux = malloc(sizeof (int) * (l->tam * 2));
+	
+	for(i=0; i < l->tam; i++){
+		aux[i] = l->vector[i];
+	}
+
+	l->tam = l->tam * 2;
+	l->vector = aux;
+}
+
+void avanzar_cursor_booleano(lista_booleano *l) {
+	l->cursor++;
+	
+	if (l->cursor > l->n_elementos) {
+		l->cursor--;
+	}
+}
+
+void retroceder_cursor_booleano(lista_booleano *l) {
+	l->cursor--;
+	
+	if (l->cursor < 0) {
+		l->cursor++;
+	}
+}
+
+void comienzo_cursor_booleano(lista_booleano *l) {
+	l->cursor = 0;
+}
+
+int longitud_booleano(lista_booleano *l){
+	return l->n_elementos;
+}
+
+int elemento_actual_booleano(lista_booleano *l){
+	return l->vector[l->cursor];
+}
+
+int elemento_pos_li_booleano(lista_booleano *l, int pos){
+	return l->vector[pos];
+}
+
+lista_booleano insertar_booleano(lista_booleano *l, int a, int pos){
+	lista_booleano aux = duplicar_lista_booleano (l);
+	
+	if (pos > aux.tam) {
+		agrandar_booleano(l);
+	}
+	
+	aux.vector[pos] = a;
+	
+	if (pos == aux.n_elementos) {
+		aux.n_elementos = pos + 1;
+	}
+
+	return aux;
+}
+
+lista_booleano borrar_li_booleano(lista_booleano *l, int pos){
+	lista_booleano aux = duplicar_lista_booleano (l);
+	
+	int i;
+	for (i = pos; i < aux.tam-1; i++) {
+		aux.vector[i] = aux.vector[i+1];
+	}
+	
+	aux.n_elementos--;
+	if (aux.cursor > pos) {
+		aux.cursor--;
+	}
+
+	return aux;
+}
+
+lista_booleano borrar_hasta_fin_li_booleano(lista_booleano *l, int pos){
+	lista_booleano aux = duplicar_lista_booleano (l);
+	
+	int i;
+	if (aux.cursor > pos) {
+		aux.cursor = pos-1;
+	}
+	
+	aux.n_elementos = pos-1;
+
+	return aux;
+}
+
+lista_booleano concatenar_ll_booleano(lista_booleano *l1, 
+							      lista_booleano *l2) {
+	lista_booleano aux;
+	inicializa_booleano_con_parametros(&aux, 
+									 l1->n_elementos+l2->n_elementos);
+									
+	int i;
+	for (i = 0; i < l1->n_elementos; i++) {
+		aux.vector[i] = l1->vector[i];
+	}
+	for (; i < l1->n_elementos + l2->n_elementos; i++) {
+		aux.vector[i] = l2->vector[i - l1->n_elementos];
+	}
+	
+	aux.n_elementos = l1->n_elementos+l2->n_elementos;
+	
+	return aux;
+}
+
+void imprimir_booleano(lista_booleano *l){
+    int i;
+
+	printf ("N elementos: %i\n", l->n_elementos);
+	for(i=0; i < l->n_elementos; i++){
+		printf("\tElemento %i: %i \n",i, l->vector[i]);
+	}
+	printf("\n");
+}
+
+#endif

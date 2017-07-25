@@ -1,0 +1,115 @@
+#include "dec_dat"
+#include <stdio.h>
+
+int iteraciones_1;
+int comienzo_1;
+
+int iteraciones_2;
+int comienzo_2;
+
+lista_entero sucesion_2;
+lista_entero sucesion_1;
+
+lista_entero sucesion_producto;
+lista_entero sucesion_suma;
+lista_entero sucesion_cat;
+
+int multiplicar;
+int sumar;
+
+int i;
+
+
+
+lista_entero SucesionFibonacci(int comienzo, int n_iteraciones){
+int va;
+int i;
+
+lista_entero suc;
+
+
+
+int IteracionFibonacci(int n1, int n2){
+int vb;
+int a;
+
+
+va = 20;
+printf("%s","Valor va");
+printf("%d",va);
+int tmp0;
+tmp0 = n1 + n2;
+
+a = tmp0;
+return a;
+
+}
+
+lista_entero tmp1;
+inicializa_entero(&tmp1);
+tmp1 = insertar_entero(&tmp1, 1, longitud_entero(&tmp1));
+tmp1 = insertar_entero(&tmp1, 1, longitud_entero(&tmp1));
+
+suc = tmp1;
+printf("%d",comienzo);
+printf("%s","\n");
+
+i = 1;
+etiqueta0:;
+if(!(i < comienzo))goto etiqueta1;
+
+{
+int resultado;
+
+int tmp2;
+tmp2 = elemento_pos_li_entero(&suc, 1);int tmp3;
+tmp3 = elemento_pos_li_entero(&suc, 0);
+resultado = IteracionFibonacci(tmp2, tmp3);
+int tmp4;
+tmp4 = elemento_pos_li_entero(&suc, 0);lista_entero tmp5;
+inicializa_entero(&tmp5);
+tmp5 = insertar_entero(&suc, tmp4, 1);
+suc = tmp5;
+lista_entero tmp6;
+inicializa_entero(&tmp6);
+tmp6 = insertar_entero(&suc, resultado, 0);
+suc = tmp6;
+
+}
+i++;goto etiqueta0;
+etiqueta1:;
+
+
+i = 1;
+etiqueta2:;
+if(!(i < n_iteraciones))goto etiqueta3;
+
+{
+int resultado;
+
+int tmp7;
+tmp7 = longitud_entero(&suc);
+int tmp8;
+tmp8 = tmp7 - 1;
+int tmp9;
+tmp9 = elemento_pos_li_entero(&suc, tmp8);int tmp10;
+tmp10 = longitud_entero(&suc);
+int tmp11;
+tmp11 = tmp10 - 2;
+int tmp12;
+tmp12 = elemento_pos_li_entero(&suc, tmp11);
+resultado = IteracionFibonacci(tmp9, tmp12);
+int tmp13;
+tmp13 = longitud_entero(&suc);
+lista_entero tmp14;
+inicializa_entero(&tmp14);
+tmp14 = insertar_entero(&suc, resultado, tmp13);
+suc = tmp14;
+
+}
+i++;goto etiqueta2;
+etiqueta3:;
+
+return suc;
+
+}
